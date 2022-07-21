@@ -43,7 +43,7 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     {% if user.is_authenticated %}
-                    <div class="nav-link active" aria-current="page" style = "font-weight: 600;">{{user.username}}
+                    <div class="nav-link active" aria-current="page" style = "font-weight: 600;">{{user.first_name}}
                     </div>
                     {% else %}
                     <a class="nav-link active" aria-current="page" href="{% url 'login' %}">Login</a>
