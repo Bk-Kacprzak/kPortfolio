@@ -21,7 +21,7 @@ from kPortfolio.main import views as main_view
 urlpatterns = [
     path(r'admin/', admin.site.urls),
     # path('api/', include('api.urls')),
-    path(r'account/', include('kPortfolio.account.urls')),
+    path(r'auth/', include('kPortfolio.account.urls')),
     path(r'', main_view.index, name='index'),
     path(r'portfolio', include('kPortfolio.portfolio.urls')),
 ]
