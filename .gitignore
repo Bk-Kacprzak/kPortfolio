@@ -1,6 +1,8 @@
 /env/
 /venv/
 /.idea/
+env_list
+.DS_Store
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/django
