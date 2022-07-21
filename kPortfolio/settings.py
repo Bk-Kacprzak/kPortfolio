@@ -154,24 +154,24 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'main')
 
-LOGIN_URL = "/account/login"
+LOGIN_URL = "/auth/login"
 LOGIN_REDIRECT_URL = "/home/"
 
 SEND_CONFIRMATION_EMAIL = True  # setting for sending email with account confirmation/email confirmation
 
 # Email settings
 
-SEND_CONFIRMATION_EMAIL = True
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.emaillabs.net.pl'
-EMAIL_HOST_USER = '1.kportfolio.smtp'
-EMAIL_HOST_PASSWORD = 'gUkIea5k'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = False
+DEFAULT_EMAIL_SENDER = os.getenv('EMAIL_HOST_USER')
 
 # SIGN_IN
 
-LOGIN_URL = _("/login/")
+LOGIN_URL = _("/auth/login/")
 
 # LOGGING SETTINGS
 
