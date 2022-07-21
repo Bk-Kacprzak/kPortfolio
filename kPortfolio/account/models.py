@@ -36,13 +36,16 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    id = models.AutoField(primary_key=True)
+    username = None
     first_name = models.CharField(_('first name'), max_length=255, unique=False, db_index=True)
     email = models.EmailField(_('email address'), unique=True, db_index=True)
+    email_activated = models.BooleanField(default=False, blank=True)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['password']
+    REQUIRED_FIELDS = []
     is_staff = True
 
     class Meta:
