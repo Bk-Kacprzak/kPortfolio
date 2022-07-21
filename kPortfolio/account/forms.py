@@ -5,10 +5,11 @@ from django.contrib.auth.forms import ValidationError
 from django.core.validators import validate_email
 from django.contrib.auth import password_validation, authenticate
 from django.utils.translation import ugettext_lazy as _
+import re
 from django.contrib import messages
 
+
 class RegisterForm(UserCreationForm):
-    # email = forms.EmailField(label="Email Address", required=True)
 
     class Meta:
         model = User
@@ -65,21 +66,70 @@ class LoginForm(AuthenticationForm):
     def clean(self):
         email = self.cleaned_data.get("username")
         password = self.cleaned_data.get("password")
-        user = authenticate(email = email, password = password)
+        user = authenticate(email=email, password=password)
         if not user or not user.is_active:
             raise ValidationError("Invalid email or password.")
 
         return self.cleaned_data
 
-    def login(self) :
+    def login(self):
         email = self.cleaned_data.get("username")
         password = self.cleaned_data.get("password")
-        print(email, password, flush = True)
+        print(email, password, flush=True)
         user = authenticate(email=email, password=password)
         return user
 
 
-# class ForgotPasswordForm()
+class ForgotPasswordForm(forms.Form):
+    email = forms.CharField(label='Email', widget=forms.TextInput(
+        attrs={'class': 'form-control form-control-lg form-control-solid', 'type': 'email',
+               'id': 'email', 'placeholder': _('Enter email')}))
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+
+        try:
+            validate_email(email)
+        except ValidationError as e:
+            raise forms.ValidationError(_('You have entered wrong email'))
+        else:
+            email_normalized = email.lower()  # fix case sensitive logging
+            return email_normalized
+
+
+class ResetPasswordForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        super(ResetPasswordForm, self).__init__(*args, **kwargs)
+        style_form(self.fields, attrs={
+            'class': 'form-control',
+            'style': 'letter-spacing: 1px; color: #303030; font-weight:400'
+        })
+
+    password = forms.CharField(label=_('Password'), widget=forms.PasswordInput(
+        attrs={'class': 'form-control form-control-lg form-control-solid',
+               'id': 'userpassword', 'placeholder': _('Enter password')}))
+
+    password_confirm = forms.CharField(label=_('Confirm password'), widget=forms.PasswordInput(
+        attrs={'class': 'form-control form-control-lg form-control-solid',
+               'id': 'conf_password', 'placeholder': _('Confirm password')}))
+
+    def clean(self):
+        try:
+            password = self.cleaned_data['password']
+            password_confirm = self.cleaned_data['password_confirm']
+        except KeyError:
+            raise forms.ValidationError(_('Please fill input fields'))
+
+        if password != password_confirm:
+            raise forms.ValidationError(_('Both password should be the same'))
+
+        reg = "((?=.*\d)(?=.*[A-Za-z])(?=.*[/\!@#$%?=*&]).{8,100})"
+        if not re.search(reg, password):
+            raise forms.ValidationError(_('Password must be at least 8 character and contain symbols'))
+
+        return self.cleaned_data
+
 
 def style_form(fields, attrs):
     input_type = 'text'
