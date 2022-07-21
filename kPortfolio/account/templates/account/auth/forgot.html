@@ -1,0 +1,41 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="container-sm p-3" style = "max-width: 600px; margin-top: 10vh">
+    <div class="auth-form">
+
+    <p class="fs-2 fw-lighter" style = "text-align: center;">Forgot Your Password?</p>
+    <p class="fs-4 fw-lighter" style= "text-align: center; margin-bottom: 50px;" >Enter your email address below and we'll send your password reset instruction by email.</p>
+
+
+    <form method = "POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+
+            <div class="input-group">
+                    <span class="input-group-text" id="basic-addon1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"></path>
+                        </svg>
+                    </span>
+                    <input name = "email" type="email" placeholder = "Enter your e-mail address " class="form-control" id="email" aria-describedby="emailHelp">
+            </div>
+
+                <p class = "auth-error-message" >
+                </p>
+
+
+        </div>
+
+        <button class="btn btn-create-account btn-outline-dark" type="submit" style = "width: 100%;" >Forgot Password</button>
+        <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+     </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'home/base.html' %}
+{% load static %}
+{% block header %}
+{% endblock %}
+
+{% block content %}
+
+<form method = "post" action = "{% url 'portfolio' %}" class="new-portfolio">
+    <div class="container add-portfolio-form form-container">
+        <div class="col">
+            <p class="fw-light fs-2 " style = "margin-top: 20px;text-align: center; color: rgb(250,105,18);" >Create New Portfolio</p>
+        </div>
+        <div class="col mt-4">
+
+        </div>
+        <div class="col mt-4">
+
+        </div>
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-8 mt-4">
+                <button onclick = "hideForm(['.add-portfolio-form'])" class="button cancel-button form-btn mr-2" style = "background:none; color:white;" type="button"> CANCEL </button>
+
+
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<a class="container-fluid content-container">
+    <div class="container-sm" style = "background: #212121; height: 600px; border-radius: 50px; margin-top: 10vh;">
+        <p class="fw-lighter fs-1" style = "padding: 50px; text-align:center;">Manual Transactions</p>
+
+        <div class="container button-container" style = "max-width: 35%">
+            <button onclick = "showForm('.add-portfolio-form')"
+                    class = "add-button" style = "border:none; background: none;">
+                <div class="row">
+                    <div class="col">
+                        <p class="fw-lighter fs-2 " style = "color: rgb(250,105,18);" >Create New Portfolio</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col" >
+                        <p class="fw-lighter fs-6 button-comment" style = "color:white;"> Add a manual crypto portfolio for manual tracking.
+                        </p>
+                    </div>
+                </div>
+            </button>
+
+        </div>
+    </div>
+
+
+
+</a>
+<script src="{% static 'events.js' %}"></script>
+
+
+{% endblock %}
