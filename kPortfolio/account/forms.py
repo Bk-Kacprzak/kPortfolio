@@ -8,6 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 import re
 from django.contrib import messages
 
+from ..utils import style_form
+
 
 class RegisterForm(UserCreationForm):
 
@@ -131,12 +133,3 @@ class ResetPasswordForm(forms.Form):
         return self.cleaned_data
 
 
-def style_form(fields, attrs):
-    input_type = 'text'
-    for field in fields.items():
-        if "password" in field[0]:
-            input_type = 'password'
-        else:
-            input_type = 'text'
-        attrs['type'] = input_type
-        field[1].widget = forms.TextInput(attrs=attrs)
