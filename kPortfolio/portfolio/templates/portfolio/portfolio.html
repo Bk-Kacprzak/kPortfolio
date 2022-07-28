@@ -5,23 +5,43 @@
 
 {% block content %}
 
-<form method = "post" action = "{% url 'portfolio' %}" class="new-portfolio">
+<form method = "post" class="new-portfolio">
+    {% csrf_token %}
     <div class="container add-portfolio-form form-container">
         <div class="col">
             <p class="fw-light fs-2 " style = "margin-top: 20px;text-align: center; color: rgb(250,105,18);" >Create New Portfolio</p>
         </div>
-        <div class="col mt-4">
 
+        {% if form.errors %}
+        {% for field in form %}
+        {% for error in field.errors %}
+        <span><b>{{ field.label }}</b>: {{ error }}</span>
+        {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <span><b>{{ error }}</span>
+
+        {% endfor %}
+        {% endif %}
+
+        <div class="col mt-4">
+            <label class="col-form-label fw-bold fs-6"> Portfolio name </label>
+            <div class="fv-row">
+                {{ form.name }}
+            </div>
         </div>
         <div class="col mt-4">
+            <label class="col-form-label fw-bold fs-6"> Total cost </label>
+            <div class="fv-row" onkeypress = "blockTypeNonNumericInput(event, this)">
+                {{ form.total_cost }}
+            </div>
 
         </div>
         <div class="row">
             <div class="col-4"></div>
             <div class="col-8 mt-4">
-                <button onclick = "hideForm(['.add-portfolio-form'])" class="button cancel-button form-btn mr-2" style = "background:none; color:white;" type="button"> CANCEL </button>
-
-
+                <button type="submit" class="button cancel-button form-btn mr-2" style = "background:none; color:white;" > Add </button>
+                <button onclick = "hideForm(['.add-portfolio-form'])" class="button cancel-button form-btn mr-2" style = "background:none; color:white;" type="button"> Cancel </button>
             </div>
         </div>
     </div>
