@@ -6,41 +6,49 @@
 
 {% block content %}
 
-<form method = "post"  class="new-portfolio">
-
+<form method = "post" class="new-portfolio">
+    {% csrf_token %}
     <div class="container add-portfolio-form form-container">
         <div class="col">
             <p class="fw-light fs-2 " style = "margin-top: 20px;text-align: center; color: rgb(250,105,18);" >Create New Portfolio</p>
         </div>
+
+        {% if portfolio_form.errors %}
+        {% for field in form %}
+        {% for error in field.errors %}
+        <span><b>{{ field.label }}</b>: {{ error }}</span>
+        {% endfor %}
+        {% endfor %}
+        {% for error in portfolio_form.non_field_errors %}
+        <span><b>{{ error }}</span>
+
+        {% endfor %}
+        {% endif %}
+
         <div class="col mt-4">
-            {% if errors %}
-            {% for msg in errors %}
-            <p class = "auth-error-message" >
-                {{ msg }}
-            </p>
-            {% endfor %}
-            {% endif %}
+            <label name='new_portfolio' class="col-form-label fw-bold fs-6"> Portfolio name </label>
+            <div class="fv-row">
+                {{ portfolio_form.name }}
+            </div>
         </div>
         <div class="col mt-4">
-            {% if errors %}
-            {% for msg in errors %}
-            <p class = "auth-error-message" >
-                {{ msg }}
-            </p>
-            {% endfor %}
-            {% endif %}
+            <label class="col-form-label fw-bold fs-6"> Total cost </label>
+            <div class="fv-row" onkeypress = "blockTypeNonNumericInput(event, this)">
+                {{ portfolio_form.total_cost }}
+            </div>
 
         </div>
         <div class="row">
             <div class="col-4"></div>
             <div class="col-8 mt-4">
-                <button onClick="hideForm(['.add-portfolio-form', '.add-asset-form'])" class="button cancel-button form-btn mr-2" style = "background:none; color:white;" type="button"> CANCEL </button>
-
+                <button type="submit" name='new_portfolio' class="button cancel-button form-btn mr-2" style = "background:none; color:white;" > Add </button>
+                <button onclick = "hideForm(['.add-portfolio-form'])" class="button cancel-button form-btn mr-2" style = "background:none; color:white;" type="button"> Cancel </button>
             </div>
         </div>
     </div>
 </form>
-<form method = "post" class="new-portfolio">
+
+<form method = "post" class="new-asset">
 
     <div class="container form-container add-asset-form">
         <div class="col">
@@ -72,7 +80,7 @@
             <div class="col-4"></div>
             <div class="col-8 mt-4">
                 <button onClick="hideForm(['.add-portfolio-form', '.add-asset-form'])" class="button cancel-button form-btn mr-2" style = "background:none; color:white;" type="button"> CANCEL </button>
-                <button class="button form-btn" type ="submit" > SAVE </button>
+                <button name='new_asset' class="button form-btn" type ="submit" > SAVE </button>
             </div>
         </div>
     </div>
@@ -123,14 +131,14 @@
 
             </table>
         </div>
-        <button
+        <button type="button"
                 onClick="showForm('.add-asset-form', '.add-portfolio-form' )"
                 class="form-btn add-button button-container "
                 style = "float:right">
             ADD ASSET
         </button>
 
-        <button onClick="showForm('.add-portfolio-form', '.add-asset-form')"
+        <button type="button" onClick="showForm('.add-portfolio-form', '.add-asset-form')"
                 class="form-btn add-button add-portfolio-button button-container mr-5" style = "float:right">ADD PORTFOLIO</button>
 
     </div>
