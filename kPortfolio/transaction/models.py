@@ -1,5 +1,5 @@
 from django.db import models
-from ..asset.models import Asset
+from ..asset.models import UserAsset, Asset
 from ..portfolio.models import Portfolio
 from django.utils.translation import gettext_lazy as _
 from datetime import date
@@ -12,7 +12,7 @@ class TransactionManager(models.Manager):
 class Transaction(models.Model):
     # id = models.AutoField(primary_key=True)
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, null=False, blank=False)
-    asset = models.ForeignKey(Asset, on_delete=models.PROTECT, null=False, blank=False)
+    asset = models.ForeignKey(UserAsset, on_delete=models.PROTECT, null=False, blank=False)
 
     price = models.FloatField(_('Price'), null=False)
     cost = models.PositiveIntegerField(blank=True, null=True)
