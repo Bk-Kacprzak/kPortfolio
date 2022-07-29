@@ -56,6 +56,9 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
+    def get_portfolios(self):
+        return self.portfolio_set.all()
+
 
 def validate_is_none(*args):
     for value in args:
