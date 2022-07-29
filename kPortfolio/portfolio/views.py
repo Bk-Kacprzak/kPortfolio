@@ -1,14 +1,17 @@
-from django.shortcuts import render, redirect, get_object_or_404, reverse
+from django.shortcuts import render, redirect, get_object_or_404, reverse, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .forms import PortfolioForm
-from .models import Portfolio
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView
 
 
-# TODO: delete it
+from .forms import PortfolioForm
+from .models import Portfolio
+from ..transaction.forms import TransactionForm
+from ..asset.models import Asset
+
+
+
 @login_required
 def portfolio(request):
     form = PortfolioForm()
@@ -48,7 +51,8 @@ class OverviewPanelView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
         # kwargs['portfolios'] = PortfolioForm.objects.filter(user=self.request.user)
         if 'portfolio_form' not in kwargs:
             kwargs['portfolio_form'] = PortfolioForm()
-        # kwargs['asset_form'] = AssetForm
+        if 'transaction_form' not in kwargs:
+            kwargs['transaction_form'] = TransactionForm(user=self.request.user)
         return kwargs
 
     def get(self, request, *args, **kwargs):
@@ -67,12 +71,18 @@ class OverviewPanelView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
                 form.add_error(None, "Form is invalid.")
                 context['portfolio_form'] = form
                 return render(request, self.template_name, self.get_context_data(**context))
-        else:
-            #TODO: CREATE TRANSACTION FORM HANDLER
-            pass
-
-
-
+        elif 'new_transaction' in request.POST:
+            form = TransactionForm(request.POST, user=request.user)
+            if form.is_valid():
+                transaction = form.save(commit=False)
+                transaction.portfolio = Portfolio.objects.get(user=request.user, name=form.cleaned_data['portfolio_name'])
+                transaction.asset = Asset.objects.get(name=form.cleaned_data['asset_name'])
+                transaction.save()
+                return HttpResponse(transaction.portfolio.get_transactions())
+            else:
+                form.add_error(None, "Form is invalid.")
+                context['transaction_form'] = form
+                return render(request, self.template_name, self.get_context_data(**context))
 
 
 # @login_required
