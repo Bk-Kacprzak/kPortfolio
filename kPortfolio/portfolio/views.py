@@ -3,31 +3,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView
-
+from django.conf import settings
 
 from .forms import PortfolioForm
 from .models import Portfolio
 from ..transaction.forms import TransactionForm
-from ..asset.models import Asset
-
-
-
-@login_required
-def portfolio(request):
-    form = PortfolioForm()
-    if request.method == "POST":
-        form = PortfolioForm(request.POST)
-        if form.is_valid():
-            portfolio = form.save(commit=False)
-            portfolio.user = request.user
-            portfolio.save()
-            return redirect(reverse('portfolio_overview'))
-
-    return render(request, "portfolio/overview.html", {'portfolio_form': form})
+from ..asset.models import Asset, UserAsset
 
 
 class PortfolioCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
-    login_url = ('/auth/login')
+    login_url = settings.LOGIN_URL
     form_class = PortfolioForm
     template_name = "portfolio/portfolio.html"
 
@@ -43,16 +28,19 @@ class PortfolioCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 
 
 class OverviewPanelView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
-    login_url = ('/auth/login')
+    login_url = settings.LOGIN_URL
     form_class = PortfolioForm
     template_name = "portfolio/overview.html"
 
     def get_context_data(self, **kwargs):
         # kwargs['portfolios'] = PortfolioForm.objects.filter(user=self.request.user)
+        kwargs['portfolios'] = self.request.user.get_portfolios()
+
         if 'portfolio_form' not in kwargs:
             kwargs['portfolio_form'] = PortfolioForm()
         if 'transaction_form' not in kwargs:
             kwargs['transaction_form'] = TransactionForm(user=self.request.user)
+
         return kwargs
 
     def get(self, request, *args, **kwargs):
@@ -75,16 +63,43 @@ class OverviewPanelView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
             form = TransactionForm(request.POST, user=request.user)
             if form.is_valid():
                 transaction = form.save(commit=False)
-                transaction.portfolio = Portfolio.objects.get(user=request.user, name=form.cleaned_data['portfolio_name'])
-                transaction.asset = Asset.objects.get(name=form.cleaned_data['asset_name'])
+                transaction.portfolio = Portfolio.objects.get(user=request.user,
+                                                              name=form.cleaned_data['portfolio_name'])
+                asset=None
+                try:
+                    asset = UserAsset.objects.get(portfolio=transaction.portfolio)
+                    asset.countValues({
+                        'cost': transaction.cost,
+                        'price': transaction.price,
+                        'amount': transaction.amount,
+                        'type': transaction.type
+                    })
+
+                except UserAsset.DoesNotExist:
+                    asset = UserAsset(asset=Asset.objects.get(name=form.cleaned_data['asset_name']),
+                                      portfolio=transaction.portfolio)
+
+                asset.save()
+                transaction.asset = asset
+                # transaction.asset = Asset.objects.get(name=form.cleaned_data['asset_name'])
                 transaction.save()
                 return HttpResponse(transaction.portfolio.get_transactions())
             else:
                 form.add_error(None, "Form is invalid.")
+                print(form.errors)
                 context['transaction_form'] = form
                 return render(request, self.template_name, self.get_context_data(**context))
 
 
-# @login_required
-# def portfolio_overview(request):
-#     return render(request, "portfolio/overview.html", {})
+@login_required
+def portfolio(request):
+    form = PortfolioForm()
+    if request.method == "POST":
+        form = PortfolioForm(request.POST)
+        if form.is_valid():
+            portfolio = form.save(commit=False)
+            portfolio.user = request.user
+            portfolio.save()
+            return redirect(reverse('portfolio_overview'))
+
+    return render(request, "portfolio/overview.html", {'portfolio_form': form})
