@@ -77,7 +77,6 @@ class LoginForm(AuthenticationForm):
     def login(self):
         email = self.cleaned_data.get("username")
         password = self.cleaned_data.get("password")
-        print(email, password, flush=True)
         user = authenticate(email=email, password=password)
         return user
 
