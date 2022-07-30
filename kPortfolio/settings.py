@@ -151,8 +151,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 import os
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'main')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'kPortfolio', 'static'),
+)
+
+STATIC_ROOT = os.path.join(BASE_DIR, '')
 
 LOGIN_URL = "/auth/login"
 LOGIN_REDIRECT_URL = "/home/"
