@@ -27,3 +27,6 @@ class Portfolio(models.Model):
 
     def get_transactions(self):
         return self.transaction_set.all()
+
+    def get_user_assets(self):
+        return self.userasset_set.all()

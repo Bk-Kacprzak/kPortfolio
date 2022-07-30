@@ -40,6 +40,17 @@ class UserAsset(models.Model):
     amount = models.FloatField(_('Total amount'), blank=True, default=0, editable=True)
     max_amount = models.FloatField(_('Max amount'), blank=True, default=0, editable=True)
 
+
+    def __str__(self):
+        return f"Asset name: {self.asset.name}; User:{self.portfolio.user}; Portfolio:{self.portfolio}"
+
+    def get_info(self):
+        return f"{_('Amount')}: {self.amount}" \
+               f"{_('Max amount')}: {self.max_amount}" \
+               f"{_('Average buy price')}: {self.average_buy_price} " \
+               f"{_('Average sell price')}: {self.average_sell_price} " \
+
+
     def get_transactions(self):
         return self.transaction_set.filter(portfolio=self.portfolio)
 
@@ -49,10 +60,9 @@ class UserAsset(models.Model):
             self.average_buy_price = np.average(a=[self.average_buy_price, transaction['price']],
                                                 weights=[self.amount, transaction['amount']])
         else:
-            self.average_buy_price = np.average(a=[self.average_sell_price, transaction['price']],
+            self.average_sell_price = np.average(a=[self.average_sell_price, transaction['price']],
                                                 weights=[self.max_amount-self.amount, transaction['amount']])
-
-        self.amount += self.amount * count
+        self.amount += transaction['amount'] * count
         if self.amount > self.max_amount:
             self.max_amount = self.amount
 
