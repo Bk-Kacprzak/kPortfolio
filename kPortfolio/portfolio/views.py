@@ -51,9 +51,13 @@ class OverviewPanelView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
         return kwargs
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, self.get_context_data())
+        if self.request.user.get_portfolios():
+            return render(request, self.template_name, self.get_context_data())
 
-    def post(self, request, *args, **kwargs):
+        return redirect(reverse('portfolio'))
+
+
+def post(self, request, *args, **kwargs):
         context = {}
         if 'new_portfolio' in request.POST:
             form = PortfolioForm(request.POST)
