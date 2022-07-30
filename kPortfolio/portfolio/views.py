@@ -16,11 +16,19 @@ class PortfolioCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     form_class = PortfolioForm
     template_name = "portfolio/portfolio.html"
 
+    def get(self, request):
+        if self.request.user.get_portfolios():
+            return redirect(reverse('portfolio_overview'))
+
+        return super(PortfolioCreateView, self).get(request)
+
     def get_form(self):
         form = super(PortfolioCreateView, self).get_form()
         return form
 
     def form_valid(self, form):
+        if Portfolio.objects.filter(user=self.request.user, name=form.cleaned_data['name']).exists():
+            return HttpResponse("User has portoflio with this name.")
         portfolio = form.save(commit=False)
         portfolio.user = self.request.user
         portfolio.save()
@@ -35,7 +43,6 @@ class OverviewPanelView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         # kwargs['portfolios'] = PortfolioForm.objects.filter(user=self.request.user)
         kwargs['portfolios'] = self.request.user.get_portfolios()
-
         if 'portfolio_form' not in kwargs:
             kwargs['portfolio_form'] = PortfolioForm()
         if 'transaction_form' not in kwargs:
@@ -51,6 +58,8 @@ class OverviewPanelView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
         if 'new_portfolio' in request.POST:
             form = PortfolioForm(request.POST)
             if form.is_valid():
+                if Portfolio.objects.filter(user=request.user, name=form.cleaned_data['name']).exists():
+                    return HttpResponse("User has portoflio with this name.")
                 portfolio = form.save(commit=False)
                 portfolio.user = request.user
                 portfolio.save()
@@ -65,20 +74,26 @@ class OverviewPanelView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
                 transaction = form.save(commit=False)
                 transaction.portfolio = Portfolio.objects.get(user=request.user,
                                                               name=form.cleaned_data['portfolio_name'])
-                asset=None
+                asset = None
                 try:
-                    asset = UserAsset.objects.get(portfolio=transaction.portfolio)
-                    asset.countValues({
-                        'cost': transaction.cost,
-                        'price': transaction.price,
-                        'amount': transaction.amount,
-                        'type': transaction.type
-                    })
+                    asset = UserAsset.objects.get(portfolio=transaction.portfolio,
+                                                  asset=form.cleaned_data['asset_name'])
 
                 except UserAsset.DoesNotExist:
-                    asset = UserAsset(asset=Asset.objects.get(name=form.cleaned_data['asset_name']),
-                                      portfolio=transaction.portfolio)
+                    if transaction.type == 'buy':
+                        asset = UserAsset(asset=Asset.objects.get(name=form.cleaned_data['asset_name']),
+                                          portfolio=transaction.portfolio)
+                    else:
+                        form.add_error(None, "Cannot do sell transaction to an asset that does not exist.")
+                        context['transaction_form'] = form
+                        return render(request, self.template_name, self.get_context_data(**context))
 
+                asset.count_values({
+                    'cost': transaction.cost,
+                    'price': transaction.price,
+                    'amount': transaction.amount,
+                    'type': transaction.type
+                })
                 asset.save()
                 transaction.asset = asset
                 # transaction.asset = Asset.objects.get(name=form.cleaned_data['asset_name'])
