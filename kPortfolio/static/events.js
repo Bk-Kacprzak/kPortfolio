@@ -20,7 +20,7 @@ const hideForm = (formClasses) => {
     mainContainer.setAttribute("style", "opacity: 1");
 }
 
-const blockTypeNonNumericInput = (event) => { 
+const blockTypeNonNumericInput = (event) => {
     // TODO: fix bug - paste shortcut works and enable to paste non-numeric input
     if (event.key.length === 1 && /\D/.test(event.key)) {
         event.preventDefault();
