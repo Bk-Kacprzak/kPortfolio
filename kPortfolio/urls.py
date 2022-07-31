@@ -24,4 +24,5 @@ urlpatterns = [
     path(r'auth/', include('kPortfolio.account.urls')),
     path(r'', main_view.index, name='index'),
     path(r'portfolio/', include('kPortfolio.portfolio.urls')),
+    path(r'asset/', include('kPortfolio.asset.urls'))
 ]
