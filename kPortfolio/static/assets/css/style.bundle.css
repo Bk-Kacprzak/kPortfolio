@@ -2229,7 +2229,7 @@ progress {
   vertical-align: bottom;
 }
 .table > :not(:last-child) > :last-child > * {
-  border-bottom-color: currentColor;
+  border-bottom-color: gray !important;
 }
 
 .caption-top {
@@ -40414,7 +40414,7 @@ code:not([class*=language-]) {
 .table.table-row-bordered tr {
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  border-bottom-color: #EFF2F5;
+  border-bottom-color: #F5F8FA;
 }
 .table.table-row-bordered tfoot th, .table.table-row-bordered tfoot td {
   border-top-width: 1px !important;
@@ -40428,7 +40428,7 @@ code:not([class*=language-]) {
   border-top-width: 1px !important;
 }
 .table.table-row-gray-100 tr {
-  border-bottom-color: #F5F8FA;
+  border-bottom-color: gray;
 }
 .table.table-row-gray-200 tr {
   border-bottom-color: #EFF2F5;
@@ -47429,9 +47429,7 @@ body {
     left: 100px;
     transition: left 0.3s ease;
   }
-  .header-fixed[data-kt-sticky-header=on][data-sidebar=on] .header {
-    right: 400px;
-  }
+
 }
 @media (max-width: 991.98px) {
   .header {
