@@ -148,3 +148,11 @@ div.button-container:hover {
     border-radius: 20px;
     float:right;
 }
+
+.pagination-button {
+    background-color: gray;
+}
+
+.btn-hover-primary:hover {
+   color:rgb(250,105,18);
+}
