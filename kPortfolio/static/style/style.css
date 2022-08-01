@@ -156,3 +156,7 @@ div.button-container:hover {
 .btn-hover-primary:hover {
    color:rgb(250,105,18);
 }
+
+.active-page {
+   color:rgb(250,105,18);
+}
