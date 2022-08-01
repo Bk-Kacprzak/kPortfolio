@@ -15,11 +15,13 @@ class PortfolioForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control form-control-lg form-control-solid',
-                'style': 'letter-spacing: 1px; color: #303030; font-weight:400'
+                'style': 'letter-spacing: 1px; color: #303030; font-weight:400',
+                'placeholder': _("Portfolio")
             }),
             'total_cost': forms.TextInput(attrs={
                 'class': 'form-control form-control-lg form-control-solid',
-                'style': 'letter-spacing: 1px; color: #303030; font-weight:400'
+                'style': 'letter-spacing: 1px; color: #303030; font-weight:400',
+                'placeholder': _("Total Amount")
             }),
         }
 

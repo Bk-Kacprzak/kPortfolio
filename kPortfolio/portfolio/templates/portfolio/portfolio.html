@@ -1,5 +1,6 @@
 {% extends 'home/base.html' %}
 {% load static %}
+{% load i18n %}
 {% block header %}
 {% endblock %}
 
@@ -7,15 +8,24 @@
 
 <form method = "post" class="new-portfolio">
     {% csrf_token %}
-    <div class="container add-portfolio-form form-container">
-        <div class="col">
-            <p class="fw-light fs-2 " style = "margin-top: 20px;text-align: center; color: rgb(250,105,18);" >Create New Portfolio</p>
+    <div class="container add-portfolio-form form-container w-lg-500px">
+        <div class="text-center mb-10 p-5">
+            <h1 class="text-dark mb-3 orange-font-color fw-bold" style="color:rgb(250,105,18) !important;"> {% trans "Create New Portfolio" %} </h1>
         </div>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-info">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
 
         {% if form.errors %}
         {% for field in form %}
         {% for error in field.errors %}
-        <span><b>{{ field.label }}</b>: {{ error }}</span>
+        <div class="alert alert-info">
+            <span><b>{{ field.label }}</b>: {{ error }}</span>
+        </div>
         {% endfor %}
         {% endfor %}
         {% for error in form.non_field_errors %}
@@ -24,35 +34,40 @@
         {% endfor %}
         {% endif %}
 
-        <div class="col mt-4">
-            <label class="col-form-label fw-bold fs-6"> Portfolio name </label>
-            <div class="fv-row">
+        <div class="fv-row mb-10">
+            <label class="form-label fs-6 fw-bolder text-dark"> Portfolio name </label>
                 {{ form.name }}
-            </div>
         </div>
-        <div class="col mt-4">
-            <label class="col-form-label fw-bold fs-6"> Total cost </label>
-            <div class="fv-row" onkeypress = "blockTypeNonNumericInput(event, this)">
-                {{ form.total_cost }}
-            </div>
 
+        <div class="input-group mb-10" onkeypress = "blockTypeNonNumericInput(event, this)">
+            <span class="input-group-text">$</span>
+            {{ form.total_cost }}
+            <span class="input-group-text">.00</span>
         </div>
-        <div class="row">
-            <div class="col-4"></div>
-            <div class="col-8 mt-4">
-                <button type="submit" class="button cancel-button form-btn mr-2" style = "background:none; color:white;" > Add </button>
-                <button onclick = "hideForm(['.add-portfolio-form'])" class="button cancel-button form-btn mr-2" style = "background:none; color:white;" type="button"> Cancel </button>
+
+        <div class="text-center mb-10">
+            <div>
+                <button type="submit" class="button cancel-button form-btn mr-2 "  >
+                    <span class="indicator-label">{% trans "Add" %} </span>
+                    <span class="indicator-progress">{% trans "Please wait..." %}
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                </button>
+                <button onclick = "hideForm(['.add-portfolio-form'])" class="button cancel-button form-btn mr-2" type="button">
+                    <span class="indicator-label">{% trans "Cancel" %} </span>
+                </button>
             </div>
         </div>
     </div>
 </form>
 
 
-<a class="container-fluid content-container">
-    <div class="container-sm" style = "background: #212121; height: 600px; border-radius: 50px; margin-top: 10vh;">
-        <p class="fw-lighter fs-1" style = "padding: 50px; text-align:center;">Manual Transactions</p>
+<a class="container-fluid content-container ">
+    <div class="container-sm card mt-5" style="background:#212121">
+        <p class="text-center fs-1 pt-10 px-10 fw-bold">Manual Transactions</p>
+        <p class="text-center fw-lighter fs-3" style="padding:0; margin:0 !important;" >{% trans "You do not have any portfolio." %}</p>
 
-        <div class="container button-container" style = "max-width: 35%">
+        <div class="text center card button-container">
             <button onclick = "showForm('.add-portfolio-form')"
                     class = "add-button" style = "border:none; background: none;">
                 <div class="row">
@@ -71,8 +86,6 @@
 
         </div>
     </div>
-
-
 
 </a>
 <script src="{% static 'events.js' %}"></script>

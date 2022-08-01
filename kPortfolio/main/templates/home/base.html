@@ -208,40 +208,41 @@
             {% block content %}{% endblock %}
             <!--end::Body-->
 
-            <!--begin::Footer-->
-            <div class="footer py-4 d-flex flex-lg-column" id="kt_footer">
-                <!--begin::Container-->
-                <div class="container d-flex flex-column flex-md-row flex-stack">
-                    <!--begin::Copyright-->
-                    <div class="text-dark order-2 order-md-1">
-                        <span class="text-muted fw-bold me-2">2021©</span>
-                        <a href="{% url 'index' %}"  class="text-gray-800 text-hover-primary">kPortfolio</a>
-                    </div>
-                    <!--end::Copyright-->
-                    <!--begin::Menu-->
-                    <ul class="menu menu-gray-600 menu-hover-primary fw-bold order-1">
-                        <li class="menu-item">
-                            <a href="#"  class="menu-link px-2">About</a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="#"  class="menu-link px-2">Support</a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="#"  class="menu-link px-2">{% trans "Terms and Conditions" %}</a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="#"  class="menu-link px-2">{% trans "Privacy Policy" %}</a>
-                        </li>
-                    </ul>
-                    <!--end::Menu-->
-                </div>
-                <!--end::Container-->
-            </div>
-            <!--end::Footer-->
+
         </div>
         <!--end::Wrapper-->
     </div>
     <!--end::Page-->
+    <!--begin::Footer-->
+    <div class="aside-footer flex-column-auto pb-5 pb-lg-10" id="kt_aside_footer" style ="position:relative; bottom:0; right:0;">
+        <!--begin::Container-->
+        <div class="container d-flex flex-column flex-md-row flex-stack">
+            <!--begin::Copyright-->
+            <div class="text-dark order-2 order-md-1">
+                <span class="text-muted fw-bold me-2">2021©</span>
+                <a href="{% url 'index' %}"  class="text-gray-800 text-hover-primary">kPortfolio</a>
+            </div>
+            <!--end::Copyright-->
+            <!--begin::Menu-->
+            <ul class="menu menu-gray-600 menu-hover-primary fw-bold order-1">
+                <li class="menu-item">
+                    <a href="#"  class="menu-link px-2">About</a>
+                </li>
+                <li class="menu-item">
+                    <a href="#"  class="menu-link px-2">Support</a>
+                </li>
+                <li class="menu-item">
+                    <a href="#"  class="menu-link px-2">{% trans "Terms and Conditions" %}</a>
+                </li>
+                <li class="menu-item">
+                    <a href="#"  class="menu-link px-2">{% trans "Privacy Policy" %}</a>
+                </li>
+            </ul>
+            <!--end::Menu-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Footer-->
 </div>
 <!--end::Root-->
 

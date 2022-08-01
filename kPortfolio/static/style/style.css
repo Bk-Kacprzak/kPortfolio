@@ -56,8 +56,6 @@ a.link {
 }
 
 div.button-container {
-    width: 30%;
-    height: 25%;
     margin: 50px;
     padding:15px;
     background: #303030;
@@ -81,8 +79,6 @@ div.button-container:hover {
     display:none;
     position:fixed;
     background:black;
-    width: 400px;
-    min-height: 500px;
     border-radius: 25px;
     top:50%;
     left:50%;
